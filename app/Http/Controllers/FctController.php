@@ -113,9 +113,9 @@ class FctController extends IntranetController
             return self::preparePdf($fct,$request->fecha,$request->horas)->stream();
         } else {
             Alert::danger("Completa les dades de l'instructor");
-            return back();   
+            return back();
         }
-        
+
     }
 
     public function certificat($id)
@@ -170,12 +170,12 @@ class FctController extends IntranetController
                     ->get();
             $id = null;
             foreach ($elementos as $elemento){
-                    if ($elemento->Periode == PeriodePractiques($request->desde)){
+                    if ($elemento->Periode == $request->periode){
                         $id = $elemento->id;
                         break;
                     }
                 }
-            if (!$id){ 
+            if (!$id){
                 $elemento = new Fct();
                 $this->validateAll($request, $elemento);
 
@@ -190,7 +190,7 @@ class FctController extends IntranetController
 
             return $id;
         });
-        
+
         return $this->redirect();
     }
 
@@ -229,11 +229,11 @@ class FctController extends IntranetController
      * @return \Illuminate\Http\RedirectResponse
      */
     public function nouAlumno($idFct, Request $request){
-        
+
         $fct = Fct::find($idFct);
         $fct->Alumnos()->attach($request->idAlumno,['calificacion'=>0,'calProyecto'=>0,'actas'=>0,'insercion'=>0,
             'desde'=> FechaInglesa($request->desde),'hasta'=> FechaInglesa($request->hasta),'horas'=>$request->horas]);
-        
+
         return back();
     }
 
@@ -259,7 +259,7 @@ class FctController extends IntranetController
      */
     public function nouInstructor($idFct, Request $request){
        $fct = Fct::find($idFct);
-       $fct->Colaboradores()->attach($request->idInstructor,['horas'=>$request->horas]); 
+       $fct->Colaboradores()->attach($request->idInstructor,['horas'=>$request->horas]);
        return back();
     }
 
@@ -270,7 +270,7 @@ class FctController extends IntranetController
      */
     public function deleteInstructor($idFct, $idInstructor){
        $fct = Fct::find($idFct);
-       $fct->Colaboradores()->detach($idInstructor); 
+       $fct->Colaboradores()->detach($idInstructor);
        return back();
     }
 
@@ -281,7 +281,7 @@ class FctController extends IntranetController
      */
     public function alumnoDelete($idFct, $idAlumno){
        $fct = Fct::find($idFct);
-       $fct->Alumnos()->detach($idAlumno); 
+       $fct->Alumnos()->detach($idAlumno);
        return back();
     }
 
